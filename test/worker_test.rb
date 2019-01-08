@@ -126,6 +126,19 @@ describe "Backburner::Worker module" do
     end
   end # tube_names
 
+  describe "for work_one_job" do
+    it "should raise when not connected to beanstalkd" do
+      worker = Backburner::Worker.new
+      class FakeConnection
+        def method_missing(m, *args, &block); raise Beaneater::NotConnected; end
+      end
+
+      assert_raises Beaneater::NotConnected do
+        capture_stdout { worker.work_one_job(FakeConnection.new) }
+      end
+    end
+  end
+
   describe "for custom serialization" do
     before do
       Backburner.configure do |config|

@@ -144,7 +144,7 @@ module Backburner
 
       unless job
         self.log_error "Error occurred before we were able to assign a job. Giving up without retrying!"
-        return
+        raise
       end
 
       # NB: There's a slight chance here that the connection to beanstalkd has
